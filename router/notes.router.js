@@ -10,46 +10,51 @@ const notes = simDB.initialize(data);
 
 router.get('/notes', (req, res, next) => {
   const { searchTerm } = req.query;
+  
   notes.filter(searchTerm)
-    .then(list => {
+    .then(function(list) {
       if (list) {
         res.json(list);
       } else {
         next();
       }
     })
-    .catch(err => {
+    .catch(function(err) {
       next(err);
     });
-  // notes.filter(searchTerm, (err, list) => {
-  //   if (err) {
-  //     return next(err); // goes to error handler
-  //   }
-  //   res.json(list); // responds with filtered array
-  // });
 });
+
+// notes.filter(searchTerm, (err, list) => {
+//   if (err) {
+//     return next(err); // goes to error handler
+//   }
+//   res.json(list); // responds with filtered array
+// });
+
 
 router.get('/notes/:id', (req, res, next) => {
   const { id } = req.params;
 
   notes.find(id)
-    .then(item => {
+    .then(function(item) {
       if (item) {
         res.json(item);
       } else {
         next();
       }
     })
-    .catch(err => {
+    .catch(function(err) {
       next(err);
     });
-  // notes.find(id, (err, item, next) => {
-  //   if (err) {
-  //     return next(err); // goes to error handler
-  //   }
-  //   res.json(item); // responds with filtered array
-  // });
 });
+
+// notes.find(id, (err, item, next) => {
+//   if (err) {
+//     return next(err); // goes to error handler
+//   }
+//   res.json(item); // responds with filtered array
+// });
+
   
 
 
@@ -68,28 +73,29 @@ router.put('/notes/:id', (req, res, next) => {
   });
 
   notes.update(id, updateObj) 
-    .then(item => {
+    .then(function(item) {
       if (item) {
         res.json(item);
       } else {
         next();
       }
     }) 
-    .catch(err => {
+    .catch(function(err) {
       next(err);
     });
-
-  // notes.update(id, updateObj, (err, item) => {
-  //   if (err) {
-  //     return next(err);
-  //   }
-  //   if (item) {
-  //     res.json(item);
-  //   } else {
-  //     next();
-  //   }
-  // });
 });
+
+// notes.update(id, updateObj, (err, item) => {
+//   if (err) {
+//     return next(err);
+//   }
+//   if (item) {
+//     res.json(item);
+//   } else {
+//     next();
+//   }
+// });
+
 
 // Post (insert) an item
 router.post('/notes', (req, res, next) => {
@@ -104,46 +110,48 @@ router.post('/notes', (req, res, next) => {
   }
 
   notes.create(newItem)
-    .then(item => {
+    .then(function(item) {
       if (item) {
         res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
       } else {
         next();
       }
     })
-    .catch(err => {
+    .catch(function(err) {
       next(err);
     });
-
-  // notes.create(newItem, (err, item) => {
-  //   if (err) {
-  //     return next(err);
-  //   }
-  //   if (item) {
-  //     res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
-  //   } else {
-  //     next();
-  //   }
-  // });
 });
+
+// notes.create(newItem, (err, item) => {
+//   if (err) {
+//     return next(err);
+//   }
+//   if (item) {
+//     res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
+//   } else {
+//     next();
+//   }
+// });
+
 
 router.delete('/notes/:id', (req, res, next) => {
   const id = req.params.id;
 
   notes.delete(id)
-    .then(() => {
+    .then(function() {
       res.sendStatus(204);
     })
     .catch(err => {
       next(err);
     });
-
-  // notes.delete(id, err => {
-  //   if (err) {
-  //     return next(err);
-  //   }
-  //   res.sendStatus(204);
-  // });
 });
+
+// notes.delete(id, err => {
+//   if (err) {
+//     return next(err);
+//   }
+//   res.sendStatus(204);
+// });
+
 
 module.exports = router;

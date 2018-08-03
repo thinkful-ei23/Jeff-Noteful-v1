@@ -42,11 +42,15 @@ const noteful = (function () {
 
       const noteId = getNoteIdFromElement(event.currentTarget);
 
-      api.details(noteId, detailsResponse => {
-        store.currentNote = detailsResponse;
-        render();
-      });
-
+      // api.details(noteId, detailsResponse => {
+      //   store.currentNote = detailsResponse;
+      //   render();
+      // });
+      api.details(noteId)
+        .then(function(detailsResponse){
+          store.currentNote = detailsResponse;
+          render();
+        });
     });
   }
 
@@ -57,11 +61,15 @@ const noteful = (function () {
       const searchTerm = $('.js-note-search-entry').val();
       store.currentSearchTerm = searchTerm ? { searchTerm } : {};
 
-      api.search(store.currentSearchTerm, searchResponse => {
-        store.notes = searchResponse;
-        render();
-      });
-
+      // api.search(store.currentSearchTerm, searchResponse => {
+      //   store.notes = searchResponse;
+      //   render();
+      // });
+      api.search(store.currentSearchTerm)
+        .then(function(searchResponse) {
+          store.notes = searchResponse;
+          render();
+        });
     });
   }
 
@@ -79,29 +87,38 @@ const noteful = (function () {
 
       if (noteObj.id) {
 
-        api.update(store.currentNote.id, noteObj, updateResponse => {
-          store.currentNote = updateResponse;
-
-          api.search(store.currentSearchTerm, searchResponse => {
-            store.notes = searchResponse;
-            render();
+        // api.update(store.currentNote.id, noteObj, updateResponse => {
+        //   store.currentNote = updateResponse;
+        api.update(store.currentNote.id, noteObj)
+          .then(function(updateResponse) {
+            store.currentNote = updateResponse;
           });
-
-        });
-
+        // api.search(store.currentSearchTerm, searchResponse => {
+        //   store.notes = searchResponse;
+        //   render();
+        // });
+        api.search(store.currentSearchTerm)
+          .then(function(searchResponse) {
+            store.notes = searchResponse;
+          });
       } else {
 
-        api.create(noteObj, createResponse => {
-          store.currentNote = createResponse;
-
-          api.search(store.currentSearchTerm, searchResponse => {
+        // api.create(noteObj, createResponse => {
+        //   store.currentNote = createResponse;
+        api.create(noteObj)
+          .then(function(createResponse) {
+            store.currentNote = createResponse;
+          });
+        // api.search(store.currentSearchTerm, searchResponse => {
+        //   store.notes = searchResponse;
+        //   render();
+        // });
+        api.search(store.currentSearchTerm)
+          .then(function(searchResponse) {
             store.notes = searchResponse;
             render();
           });
-
-        });
-      }
-
+      }     
     });
   }
 
@@ -121,17 +138,29 @@ const noteful = (function () {
 
       const noteId = getNoteIdFromElement(event.currentTarget);
 
-      api.remove(noteId, () => {
+      //   api.remove(noteId, () => {
 
-        api.search(store.currentSearchTerm, searchResponse => {
-          store.notes = searchResponse;
-          if (noteId === store.currentNote.id) {
-            store.currentNote = {};
-          }
-          render();
+      //     api.search(store.currentSearchTerm, searchResponse => {
+      //       store.notes = searchResponse;
+      //       if (noteId === store.currentNote.id) {
+      //         store.currentNote = {};
+      //       }
+      //       render();
+      //     });
+
+      //   });
+      // });
+      api.remove(noteId)
+        .then(function() {
+          api.search(store.currentSearchTerm)
+            .then(function(searchResponse) {
+              store.notes = searchResponse;
+              if (noteId === store.currentNote.id) {
+                store.currentNote = {};
+              }
+              render();
+            });
         });
-
-      });
     });
   }
 
@@ -149,5 +178,4 @@ const noteful = (function () {
     render: render,
     bindEventListeners: bindEventListeners,
   };
-
 }());
