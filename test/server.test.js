@@ -163,10 +163,10 @@ describe('PUT /api/notes/:id', function() {
 
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        expect(res.body).to.be.a('object');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.include.keys('id', 'title', 'content');
 
-        expect(res.body.id).to.equal(1005);
+        expect(res.body.id).to.equal(1007);
         expect(res.body.title).to.equal(updateItem.title);
         expect(res.body.content).to.equal(updateItem.content);
       });
@@ -198,7 +198,7 @@ describe('PUT /api/notes/:id', function() {
       .then(function(res) {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res.body).to.be.a('object');
+        expect(res.body).to.be.an('object');
         expect(res.body.message).to.equal('Missing `title` in request body');
       });
   });
